@@ -9,9 +9,9 @@ class Database
     {
         try {
             if (!isset(self::$pdo)) {
-                $dsn = 'mysql:host=monorail.proxy.rlwy.net;port=36225;dbname=railway';
+                $dsn = 'mysql:host=localhost;dbname=appmvc';
                 $username = 'root';
-                $password = 'xCPZHKtQijuNOvSwXNYUSTYBHiuJpCQO';
+                $password = 'root';
 
                 self::$pdo = new PDO($dsn, $username, $password);
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

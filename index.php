@@ -12,37 +12,7 @@ $router = new Router();
 // Definimos las rutas que utilizaremos
 
 /*
-    -----------------------  RUTAS PARA LA TABLA VENDEDOR -------------------------
-*/
-
-
-$router->get('/obtener-vendedor/(\d+)', 'VendedorController@obtenerVendedorPorId'); 
-$router->post('/crear-vendedor', 'VendedorController@crearVendedor'); 
-$router->put('/actualizar-vendedor/(\d+)', 'VendedorController@actualizarVendedorPorId'); 
-$router->delete('/eliminar-vendedor/(\d+)', 'VendedorController@eliminarVendedorPorId'); 
-
-
-/*
-    --------------------------------------------------------------------------------
-*/
-
-/*
-    -----------------------  RUTAS PARA LA TABLA CLIENTE -------------------------
-*/
-
-
-$router->get('/obtener-cliente/(\d+)', 'ClienteController@obtenerClientePorId'); 
-$router->post('/crear-cliente', 'ClienteController@crearCliente'); 
-$router->put('/actualizar-cliente/(\d+)', 'ClienteController@actualizarClientePorId'); 
-$router->delete('/eliminar-cliente/(\d+)', 'ClienteController@eliminarClientePorId'); 
-
-
-/*
-    --------------------------------------------------------------------------------
-*/
-
-/*
-    -----------------------  RUTAS PARA LA TABLA ORDENGASOLINA -------------------------
+    -----------------------  RUTAS PARA LA TABLA ORDEN -------------------------
 */
 
 
@@ -50,37 +20,6 @@ $router->get('/obtener-orden/(\d+)', 'OrdenController@obtenerOrdenPorId');
 $router->post('/crear-orden', 'OrdenController@crearOrden'); 
 $router->put('/actualizar-orden/(\d+)', 'OrdenController@actualizarOrdenPorId'); 
 $router->delete('/eliminar-orden/(\d+)', 'OrdenController@eliminarOrdenPorId'); 
-
-
-/*
-    --------------------------------------------------------------------------------
-*/
-
-
-/*
-    -----------------------  RUTAS PARA LA TABLA FACTURA -------------------------
-*/
-
-
-$router->get('/obtener-factura/(\d+)', 'FacturaController@obtenerFacturaPorId'); 
-$router->post('/crear-factura', 'FacturaController@crearFactura'); 
-$router->put('/actualizar-factura/(\d+)', 'FacturaController@actualizarFacturaPorId'); 
-$router->delete('/eliminar-factura/(\d+)', 'FacturaController@eliminarFacturaPorId'); 
-
-
-/*
-    --------------------------------------------------------------------------------
-*/
-
-/*
-    -----------------------  RUTAS PARA LAS 2 CONSULTAS RESTANTES  -------------------------
-*/
-
-
-$router->get('/obtener-datos-cvo/(\d+)', 'APIController@obtenerClienteVendedorOrdenPorIdFactura'); 
-$router->get('/obtener-datos-fao/(\d+)', 'APIController@obtenerFacturasPorOrdenPorIdOrden'); 
-
-
 
 
 // Ejecutamos nuestro enrutador

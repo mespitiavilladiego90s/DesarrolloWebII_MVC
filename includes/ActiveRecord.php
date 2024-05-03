@@ -113,33 +113,5 @@ class ActiveRecord {
         $resultado = self::consultarSQL($query);
         return !empty($resultado) ? $resultado[0] : null;
     }
-
-    public static function obtenerClienteVendedorOrdenPorIdFactura($id) {
-        // Verificamos si el parámetro es un entero mayor que 0
-        if (!is_numeric($id) || $id <= 0 || $id != floor($id)) {
-            return ['error' => 'El ID de factura proporcionado no es valido.'];
-        }
-
-        $query = "CALL obtenerDatosClienteVendedorOrden(?)";
-        $stmt = self::$db->prepare($query);
-        $stmt->bindParam(1, $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public static function obtenerFacturasPorOrdenPorIdOrden($id) {
-        // Verificamos si el parámetro es un entero mayor que 0
-        if (!is_numeric($id) || $id <= 0 || $id != floor($id)) {
-            return ['error' => 'El ID de orden proporcionado no es valido.'];
-        }
-
-        $query = "CALL obtenerFacturasAOrden(?)";
-        $stmt = self::$db->prepare($query);
-        $stmt->bindParam(1, $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 }
 
