@@ -2,7 +2,8 @@
 
 require_once 'includes/db.php';
 
-class ActiveRecord {
+class ActiveRecord
+{
     protected static $db;
     protected static $tabla = '';
     protected static $columnasDB = [];
@@ -10,20 +11,24 @@ class ActiveRecord {
 
     protected static $alertas = [];
 
-    public static function setAlerta($tipo, $mensaje) {
+    public static function setAlerta($tipo, $mensaje)
+    {
         static::$alertas[$tipo][] = $mensaje;
     }
 
     // Validación
-    public static function getAlertas() {
+    public static function getAlertas()
+    {
         return static::$alertas;
     }
 
-    public static function setDB($database) {
+    public static function setDB($database)
+    {
         self::$db = $database;
     }
 
-    public static function consultarSQL($query) {
+    public static function consultarSQL($query)
+    {
         $resultado = self::$db->query($query);
         $array = [];
         while ($registro = $resultado->fetch(PDO::FETCH_ASSOC)) {
@@ -32,7 +37,8 @@ class ActiveRecord {
         return $array;
     }
 
-    protected static function crearObjeto($registro) {
+    protected static function crearObjeto($registro)
+    {
         $objeto = new static;
 
         foreach ($registro as $key => $value) {
@@ -44,7 +50,8 @@ class ActiveRecord {
         return $objeto;
     }
 
-    public function atributos() {
+    public function atributos()
+    {
         $atributos = [];
         foreach (static::$columnasDB as $columna) {
             if ($columna === 'id') continue;
@@ -53,7 +60,8 @@ class ActiveRecord {
         return $atributos;
     }
 
-    public function sanitizarAtributos() {
+    public function sanitizarAtributos()
+    {
         $atributos = $this->atributos();
         $sanitizado = [];
         foreach ($atributos as $key => $value) {
@@ -62,7 +70,8 @@ class ActiveRecord {
         return $sanitizado;
     }
 
-    public function sincronizar($args = []) {
+    public function sincronizar($args = [])
+    {
         foreach ($args as $key => $value) {
             if (property_exists($this, $key) && !is_null($value)) {
                 $this->$key = $value;
@@ -70,7 +79,8 @@ class ActiveRecord {
         }
     }
 
-    public function guardar() {
+    public function guardar()
+    {
         $resultado = null;
         if (!is_null($this->id)) {
             $resultado = $this->actualizar();
@@ -80,13 +90,15 @@ class ActiveRecord {
         return $resultado;
     }
 
-    public static function all() {
+    public static function all()
+    {
         $query = "SELECT * FROM " . static::$tabla;
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
 
-    public function crear() {
+    public function crear()
+    {
         $atributos = $this->sanitizarAtributos();
         $columnas = implode(', ', array_keys($atributos));
         $valores = implode(', ', array_values($atributos));
@@ -99,13 +111,16 @@ class ActiveRecord {
         ];
     }
 
+    // Busca un registro por un parámetro
     public static function where($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
 
-    public function actualizar() {
+
+    public function actualizar()
+    {
         $atributos = $this->sanitizarAtributos();
         $valores = [];
         foreach ($atributos as $key => $value) {
@@ -119,16 +134,17 @@ class ActiveRecord {
         ];
     }
 
-    public function eliminar() {
+    public function eliminar()
+    {
         $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->quote($this->id) . " LIMIT 1";
         $resultado = self::$db->query($query);
         return $resultado;
     }
 
-    public static function find($id) {
+    public static function find($id)
+    {
         $query = "SELECT * FROM " . static::$tabla . " WHERE id = " . self::$db->quote($id) . " LIMIT 1";
         $resultado = self::consultarSQL($query);
         return !empty($resultado) ? $resultado[0] : null;
     }
 }
-

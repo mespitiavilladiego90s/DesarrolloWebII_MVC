@@ -29,14 +29,19 @@ class Router
     }
 
     // Método para ejecutar la ruta actual
+    // Método para ejecutar la ruta actual
     public function comprobarRutas()
     {
-        $currentUrl = $_SERVER['REQUEST_URI'];
+        $currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Obtener la ruta de la URL actual
         $method = $_SERVER['REQUEST_METHOD'];
 
         // Verificar si la ruta actual coincide con alguna ruta definida
         foreach ($this->routes[$method] as $urlPattern => $controllerMethod) {
-            if (preg_match($this->patternToRegex($urlPattern), $currentUrl, $matches)) {
+            // Dividir la URL en ruta y parámetros de consulta
+            $urlParts = explode('?', $urlPattern, 2);
+            $urlPath = $urlParts[0];
+
+            if (preg_match($this->patternToRegex($urlPath), $currentUrl, $matches)) {
                 // Llamar al método del controlador asociado a la ruta
                 $this->callControllerMethod($controllerMethod, $matches);
                 return;
@@ -46,6 +51,7 @@ class Router
         // Si no se encuentra ninguna ruta coincidente
         echo "Página No Encontrada o Ruta no válida";
     }
+
 
     // Método para convertir un patrón de ruta en una expresión regular
     private function patternToRegex($pattern)
@@ -77,11 +83,16 @@ class Router
 
         // Verificamos si el archivo de la vista existe
         if (file_exists($viewFile)) {
-            // Extraer los datos para hacerlos disponibles en la vista
+            // Extraemos los datos para hacerlos disponibles en la vista
             extract($data);
 
-            // Incluimos el archivo de la vista
+            // Almacenamos el contenido de la vista en un buffer de salida
+            ob_start();
             include $viewFile;
+            $content = ob_get_clean();
+
+            // Incluimos el layout y pasar el contenido de la vista como parte de los datos
+            include "./views/layout.php";
         } else {
             // Si la vista no existe, mostrar un mensaje de error
             echo "Vista no encontrada";
