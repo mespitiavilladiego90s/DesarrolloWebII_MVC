@@ -21,6 +21,7 @@ class UsuarioModel extends ActiveRecord
     public $confirmado;
     public $token;
 
+    
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;

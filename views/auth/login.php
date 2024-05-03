@@ -18,13 +18,13 @@
                     <form class="formulario" method="POST" action="/login">
                         <!-- Email input -->
                         <div data-mdb-input-init class="campo form-outline mb-4">
-                            <input type="email" id="email" class="form-control w-100" />
-                            <label class="form-label" for="email" name="email">Dirección Email</label>
+                            <input type="email" id="email" class="form-control w-100" name="email"/>
+                            <label class="form-label" for="email" >Dirección Email</label>
                         </div>
                         <!-- Password input -->
                         <div data-mdb-input-init class="campo form-outline mb-4">
-                            <input type="password" id="password" class="form-control w-100" />
-                            <label class="form-label" for="password" name="password">Password</label>
+                            <input type="password" id="password" class="form-control w-100" name="password"/>
+                            <label class="form-label" for="password" >Password</label>
                         </div>
                         <!-- 2 column grid layout for inline styling -->
                         <div class="row mb-4">
@@ -53,8 +53,3 @@
     </div>
 </div>
 
-<script>
-    // Captura las alertas enviadas desde PHP y las almacena en una variable JavaScript
-    var alertas = <?php echo json_encode($alertas); ?>;
-    console.log(alertas); // Verifica las alertas en la consola del navegador
-</script>

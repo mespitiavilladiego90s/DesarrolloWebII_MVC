@@ -36,5 +36,8 @@ $router->get('/confirmar-cuenta', 'LoginController@confirmar');
 $router->get('/mensaje', 'LoginController@mensaje');
 
 
+// Index
+$router->get('/index', 'LoginController@index');
+
 // Ejecutamos nuestro enrutador
 $router->comprobarRutas();

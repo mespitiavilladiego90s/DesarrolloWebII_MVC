@@ -10,7 +10,6 @@ class LoginController
         $alertas = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             $auth = new UsuarioModel($_POST);
             $alertas = $auth->validarLogin();
 
@@ -30,9 +29,12 @@ class LoginController
                         $_SESSION['login'] = true;
 
                         // Redireccionamiento
-                        header('Location: /index');
-                    } else {
-                        UsuarioModel::setAlerta('error', 'Password Incorrecto o tu cuenta no ha sido confirmada');
+                        if($usuario->admin === 1) {
+                            $_SESSION['admin'] = $usuario->admin ?? null;
+                            header('Location: /index');
+                        } else {
+                            header('Location: /login');
+                        }
                     }
                 } else {
                     UsuarioModel::setAlerta('error', 'Usuario no encontrado');
@@ -47,11 +49,17 @@ class LoginController
         ]);
     }
 
+
     public static function logout()
     {
+        // Cerrar sesión
         session_start();
-        $_SESSION = [];
+        session_unset();
+        session_destroy();
+
+        // Redirigir al usuario a la página de login
         header('Location: /login');
+        exit();
     }
 
     public static function olvide(Router $router)
@@ -66,8 +74,7 @@ class LoginController
             if (empty($alertas)) {
                 $usuario = UsuarioModel::where('email', $auth->email);
 
-                if ($usuario && $usuario->confirmado === "1") {
-
+                if ($usuario && $usuario->confirmado === 1) {
                     // Generar un token
                     $usuario->crearToken();
                     $usuario->guardar();
@@ -214,6 +221,15 @@ class LoginController
         // Renderizar la vista
         $router->render('auth/confirmar-cuenta', [
             'alertas' => $alertas
+        ]);
+    }
+
+
+    public static function index(Router $router){
+        session_start();
+        isAdmin();
+        $router->render('index', [
+
         ]);
     }
 }

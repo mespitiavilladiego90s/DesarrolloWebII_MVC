@@ -54,8 +54,8 @@ class Email {
         $mail->Host = 'smtp.mailtrap.io';
         $mail->SMTPAuth = true;
         $mail->Port = 2525;
-        $mail->Username = '4ec54dfb980a42';
-        $mail->Password = 'ae938c99960f22';
+        $mail->Username = '3ab8d301a24025';
+         $mail->Password = '6a1a87e3ed5e6f';
     
         $mail->setFrom('cuentas@appmvc.com');
         $mail->addAddress('cuentas@appmvc.com', 'AppMVC.com');

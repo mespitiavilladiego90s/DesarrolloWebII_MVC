@@ -113,10 +113,13 @@ class ActiveRecord
 
     // Busca un registro por un parámetro
     public static function where($columna, $valor) {
+        static::$alertas = []; // Inicializar el array de alertas
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        return array_shift($resultado);
     }
+    
+
 
 
     public function actualizar()
