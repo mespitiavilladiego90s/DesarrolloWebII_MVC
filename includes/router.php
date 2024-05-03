@@ -5,27 +5,32 @@ class Router
     public array $routes = [];
 
     // Método para agregar una ruta GET
-    public function get($url, $controllerMethod) {
+    public function get($url, $controllerMethod)
+    {
         $this->routes['GET'][$url] = $controllerMethod;
     }
 
     // Método para agregar una ruta POST
-    public function post($url, $controllerMethod) {
+    public function post($url, $controllerMethod)
+    {
         $this->routes['POST'][$url] = $controllerMethod;
     }
 
     // Método para agregar una ruta PUT
-    public function put($url, $controllerMethod) {
+    public function put($url, $controllerMethod)
+    {
         $this->routes['PUT'][$url] = $controllerMethod;
     }
 
     // Método para agregar una ruta DELETE
-    public function delete($url, $controllerMethod) {
+    public function delete($url, $controllerMethod)
+    {
         $this->routes['DELETE'][$url] = $controllerMethod;
-    }    
+    }
 
     // Método para ejecutar la ruta actual
-    public function comprobarRutas() {
+    public function comprobarRutas()
+    {
         $currentUrl = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -43,12 +48,14 @@ class Router
     }
 
     // Método para convertir un patrón de ruta en una expresión regular
-    private function patternToRegex($pattern) {
+    private function patternToRegex($pattern)
+    {
         return '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $pattern) . '/?$#';
     }
 
     // Método para llamar al método del controlador
-    private function callControllerMethod($controllerMethod, $matches) {
+    private function callControllerMethod($controllerMethod, $matches)
+    {
         // Separamos el nombre del controlador y el método
         [$controllerName, $methodName] = explode('@', $controllerMethod);
 
@@ -59,6 +66,25 @@ class Router
         $controller = new $controllerName();
 
         // Llamarmos al método del controlador, pasando los parámetros coincidentes
-        $controller->$methodName(...array_slice($matches, 1));
+        $controller->$methodName($this, ...array_slice($matches, 1));
+    }
+
+    // Método para renderizar una vista
+    public function render($view, $data = [])
+    {
+        // Ruta completa del archivo de la vista
+        $viewFile = "./views/$view.php";
+
+        // Verificamos si el archivo de la vista existe
+        if (file_exists($viewFile)) {
+            // Extraer los datos para hacerlos disponibles en la vista
+            extract($data);
+
+            // Incluimos el archivo de la vista
+            include $viewFile;
+        } else {
+            // Si la vista no existe, mostrar un mensaje de error
+            echo "Vista no encontrada";
+        }
     }
 }

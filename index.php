@@ -16,11 +16,6 @@ $router = new Router();
 */
 
 
-$router->get('/obtener-orden/(\d+)', 'OrdenController@obtenerOrdenPorId'); 
-$router->post('/crear-orden', 'OrdenController@crearOrden'); 
-$router->put('/actualizar-orden/(\d+)', 'OrdenController@actualizarOrdenPorId'); 
-$router->delete('/eliminar-orden/(\d+)', 'OrdenController@eliminarOrdenPorId'); 
-
-
+$router->get('/login', 'LoginController@login'); 
 // Ejecutamos nuestro enrutador
 $router->comprobarRutas();

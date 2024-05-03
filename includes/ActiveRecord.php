@@ -8,6 +8,17 @@ class ActiveRecord {
     protected static $columnasDB = [];
     protected $id;
 
+    protected static $alertas = [];
+
+    public static function setAlerta($tipo, $mensaje) {
+        static::$alertas[$tipo][] = $mensaje;
+    }
+
+    // Validación
+    public static function getAlertas() {
+        return static::$alertas;
+    }
+
     public static function setDB($database) {
         self::$db = $database;
     }
@@ -86,6 +97,12 @@ class ActiveRecord {
             'id' => self::$db->lastInsertId(),
             'mensaje' => $resultado ? '' : 'Error al crear el registro'
         ];
+    }
+
+    public static function where($columna, $valor) {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado ) ;
     }
 
     public function actualizar() {
