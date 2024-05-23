@@ -1,21 +1,23 @@
-<div class="container d-flex justify-content-center align-items-center h-100 mb-2">
-    <div class="text-center">
-        <h1 class="nombre-pagina">Confirmar Cuenta</h1>
-
-        <?php
-        foreach ($alertas as $key => $mensajes) :
-            foreach ($mensajes as $mensaje) :
-                ?>
-                <div class="alert alert-danger" role="alert">
-                    <?php echo $mensaje; ?>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-4">
+            <div class="card my-5">
+                <div class="card-header">
+                    <h3>Confirmar</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
                 </div>
-            <?php
-            endforeach;
-        endforeach;
-        ?>
 
-        <div class="acciones">
-            <a href="/login">Iniciar Sesión</a>
+                <div class="card-body d-flex justify-content-center">
+                    <a href="/login">Iniciar Sesión</a>
+                </div>
+                
+                
+            </div>
         </div>
     </div>
 </div>
+

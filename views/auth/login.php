@@ -1,52 +1,50 @@
-<div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-xl-10">
-            <div class="card" style="border-radius: 1rem;">
-                <div class="card-body p-4 p-lg-5 text-black">
-                    <h1 class="text-center">Ingresa tus datos para poder iniciar sesión.</h1>
-                    <?php
-                    foreach ($alertas as $key => $mensajes) :
-                        foreach ($mensajes as $mensaje) :
-                    ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo $mensaje; ?>
-                            </div>
-                    <?php
-                        endforeach;
-                    endforeach;
-                    ?>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-4">
+            <div class="card my-5">
+                <div class="card-header">
+                    <h3>Login</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                
+
                     <form class="formulario" method="POST" action="/login">
-                        <!-- Email input -->
-                        <div data-mdb-input-init class="campo form-outline mb-4">
-                            <input type="email" id="email" class="form-control w-100" name="email"/>
-                            <label class="form-label" for="email" >Dirección Email</label>
-                        </div>
-                        <!-- Password input -->
-                        <div data-mdb-input-init class="campo form-outline mb-4">
-                            <input type="password" id="password" class="form-control w-100" name="password"/>
-                            <label class="form-label" for="password" >Password</label>
-                        </div>
-                        <!-- 2 column grid layout for inline styling -->
-                        <div class="row mb-4">
-                            <div class="col d-flex justify-content-center">
-                                <!-- Checkbox -->
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                                    <label class="form-check-label" for="form2Example31"> Recuérdame</label>
-                                </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <div class="col">
-                                <!-- Simple link -->
-                                <a href="/olvide">¿Olvidaste tu contraseña?</a>
+                            <input type="email" id="email" placeholder="username" name="email">
+                        </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
+                            <input type="password" id="password" placeholder="password" name="password">
                         </div>
-                        <!-- Submit button -->
-                        <input type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4 w-100" value="Iniciar Sesión">
-                        <!-- Register buttons -->
-                        <div class="text-center">
-                            <p>¿No tienes una cuenta? <a href="/crear-cuenta">Regístrate</a></p>
+
+                        <div class="form-group d-flex justify-content-center">
+                            <input type="submit" value="Login" class="btn float-right login_btn">
                         </div>
+
                     </form>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                        No tienes una cuenta?<a href="/crear-cuenta">Registrate</a>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <a href="/olvide">Olvidaste tu contraseña?</a>
+                    </div>
                 </div>
             </div>
         </div>

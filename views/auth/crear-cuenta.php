@@ -1,51 +1,75 @@
-<div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-xl-10">
-            <div class="card" style="border-radius: 1rem;">
-                <div class="card-body p-4 p-lg-5 text-black">
-                    <h1 class="nombre-pagina text-center">Crear Cuenta</h1>
-                    <p class="descripcion-pagina text-center">Llena el siguiente formulario para crear una cuenta</p>
-                    <?php
-                    foreach ($alertas as $key => $mensajes) :
-                        foreach ($mensajes as $mensaje) :
-                    ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo $mensaje; ?>
-                            </div>
-                    <?php
-                        endforeach;
-                    endforeach;
-                    ?>
-                    <form class="formulario" method="POST" action="/crear-cuenta">
-                        <div class="campo form-outline mb-4">
-                            <input type="text" id="nombre" class="form-control w-100" name="nombre" placeholder="Tu Nombre" value="<?php echo s($usuario->nombre); ?>" />
-                            <label class="form-label" for="nombre">Nombre</label>
-                        </div>
-                        <div class="campo form-outline mb-4">
-                            <input type="text" id="apellido" class="form-control w-100" name="apellido" placeholder="Tu Apellido" value="<?php echo s($usuario->apellido); ?>" />
-                            <label class="form-label" for="apellido">Apellido</label>
-                        </div>
-                        <div class="campo form-outline mb-4">
-                            <input type="tel" id="telefono" class="form-control w-100" name="telefono" placeholder="Tu Teléfono" value="<?php echo s($usuario->telefono); ?>" />
-                            <label class="form-label" for="telefono">Teléfono</label>
-                        </div>
-                        <div class="campo form-outline mb-4">
-                            <input type="email" id="email" class="form-control w-100" name="email" placeholder="Tu E-mail" value="<?php echo s($usuario->email); ?>" />
-                            <label class="form-label" for="email">E-mail</label>
-                        </div>
-                        <div class="campo form-outline mb-4">
-                            <input type="password" id="password" class="form-control w-100" name="password" placeholder="Tu Password" />
-                            <label class="form-label" for="password">Password</label>
-                        </div>
-                        <input type="submit" value="Crear Cuenta" class="btn btn-primary btn-block mb-4 w-100">
-                    </form>
-                    <div class="text-center">
-                        <div class="acciones">
-                            <a href="/login">¿Ya tienes una cuenta? Inicia Sesión</a>
-                            <a href="/olvide">¿Olvidaste tu password?</a>
-                        </div>
+<div class="container mb-2">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-4">
+            <div class="card my-5">
+
+                <div class="card-header">
+                    <h3>Registrarse</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
                     </div>
                 </div>
+                <div class="card-body">
+
+                    <form class="formulario" method="POST" action="/crear-cuenta">
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-info"></i></span>
+                            </div>
+                            <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" value="<?php echo s($usuario->nombre); ?>" />
+                        </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-info"></i></span>
+                            </div>
+                            <input type="text" id="apellido" name="apellido" placeholder="Tu Apellido" value="<?php echo s($usuario->apellido); ?>" />
+                        </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-info"></i></span>
+                            </div>
+                            <input type="tel" id="telefono" name="telefono" placeholder="Tu Teléfono" value="<?php echo s($usuario->telefono); ?>" />
+                        </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-info"></i></span>
+                            </div>
+                            <input type="email" id="email" name="email" placeholder="Tu E-mail" value="<?php echo s($usuario->email); ?>" />
+                        </div>
+
+                        <div class="input-group form-group mb-2 d-flex justify-content-center">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" id="password" name="password" placeholder="Tu Password" />
+                        </div>
+
+                        
+
+
+                        <div class="form-group d-flex justify-content-center">
+                            <input type="submit"  value="Crear" class="btn float-right login_btn">
+                        </div>
+
+                    </form>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                    ¿Ya tienes una cuenta?<a href="/login">Inicia Sesión</a>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <a href="/olvide">Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

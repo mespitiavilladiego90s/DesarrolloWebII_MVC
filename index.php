@@ -7,6 +7,7 @@ require_once './includes/ActiveRecord.php'; // Incluimos ActiveRecord.php que co
 require_once './includes/funciones.php';
 ActiveRecord::setDB(Database::getConnection());
 
+
 // Instanciamos un nuevo objeto de tipo router
 $router = new Router();
 
@@ -38,6 +39,13 @@ $router->get('/mensaje', 'LoginController@mensaje');
 
 // Index
 $router->get('/index', 'LoginController@index');
+
+
+/*
+    -----------------------  RUTAS PARA LA TABLA ACTAS -------------------------
+*/
+$router->post('/crear-acta', 'ActaController@crear');
+
 
 // Ejecutamos nuestro enrutador
 $router->comprobarRutas();

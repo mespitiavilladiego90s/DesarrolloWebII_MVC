@@ -29,8 +29,8 @@ class LoginController
                         $_SESSION['login'] = true;
 
                         // Redireccionamiento
-                        if($usuario->admin === 1) {
-                            $_SESSION['admin'] = $usuario->admin ?? null;
+                        if($usuario->rol === 2) {
+                            $_SESSION['rol'] = $usuario->rol ?? null;
                             header('Location: /index');
                         } else {
                             header('Location: /login');
@@ -227,7 +227,7 @@ class LoginController
 
     public static function index(Router $router){
         session_start();
-        isAdmin();
+        checkPerm();
         $router->render('index', [
 
         ]);

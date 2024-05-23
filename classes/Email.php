@@ -26,8 +26,8 @@ class Email {
          $mail->Username = '3ab8d301a24025';
          $mail->Password = '6a1a87e3ed5e6f';
      
-         $mail->setFrom('cuentas@appmvc.com');
-         $mail->addAddress('cuentas@appmvc.com', 'AppMVC.com');
+         $mail->setFrom('cuentas@mymeet.com');
+         $mail->addAddress('cuentas@mymeet.com', 'mymeet.com');
          $mail->Subject = 'Confirma tu Cuenta';
 
          // Set HTML
@@ -35,7 +35,7 @@ class Email {
          $mail->CharSet = 'UTF-8';
 
          $contenido = '<html>';
-         $contenido .= "<p><strong>Hola " . $this->email .  "</strong> Has Creado tu cuenta en App MVC, solo debes confirmarla presionando el siguiente enlace</p>";
+         $contenido .= "<p><strong>Hola " . $this->email .  "</strong> Has Creado tu cuenta en MyMeet!, solo debes confirmarla presionando el siguiente enlace</p>";
          $contenido .= "<p>Presiona aquí: <a href='http://localhost:3000/confirmar-cuenta?token=" . $this->token . "'>Confirmar Cuenta</a>";        
          $contenido .= "<p>Si tu no solicitaste este cambio, puedes ignorar el mensaje</p>";
          $contenido .= '</html>';
@@ -57,8 +57,8 @@ class Email {
         $mail->Username = '3ab8d301a24025';
          $mail->Password = '6a1a87e3ed5e6f';
     
-        $mail->setFrom('cuentas@appmvc.com');
-        $mail->addAddress('cuentas@appmvc.com', 'AppMVC.com');
+        $mail->setFrom('cuentas@mymeet.com');
+        $mail->addAddress('cuentas@mymeet.com', 'mymeet.com');
         $mail->Subject = 'Reestablece tu password';
 
         // Set HTML
