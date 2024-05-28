@@ -4,69 +4,72 @@ require_once './includes/router.php';
 require_once './classes/Email.php';
 require_once './classes/JWT.php';
 
-class LoginController {
-    public static function login(Router $router) {
+class LoginController
+{
+    public static function login(Router $router)
+    {
         $alertas = [];
         $token = '';
-    
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $auth = new UsuarioModel($_POST);
             $alertas = $auth->validarLogin();
-    
-            if (empty($alertas)) {
-                // Comprobar que exista el usuario
-                $usuario = UsuarioModel::existeUsuario($auth->email);
-    
-                if ($usuario) {
-                    if ($usuario->comprobarPasswordAndVerificado($auth->password)) {
-                        // Crear JWT
-                        $jwt = new JWT();
-                        $token = $jwt->encode([
-                            'id' => $usuario->id,
-                            'nombre' => $usuario->nombre,
-                            'apellido' => $usuario->apellido,
-                            'email' => $usuario->email,
-                            'rol' => $usuario->rol,
-                            'exp' => time() + (60 * 60) 
-                        ]);
 
-                        debuguear($token);
-    
-                        // Verificar si es admin
-                        if ($usuario->rol === 'Admin') {
-                            // Redireccionar a la página de index
-                            header('Location: /index');
-                            exit;
-                        } else {
-                            // Redireccionar a la página de login
-                            header('Location: /login');
-                            exit;
-                        }
-                    }
+            if (empty($alertas)) {
+                $usuario = UsuarioModel::existeUsuario($auth->email);
+
+                if ($usuario && $usuario->comprobarPasswordAndVerificado($auth->password)) {
+                    // Crear JWT
+                    $jwt = new JWT();
+                    $token = $jwt->encode([
+                        'id' => $usuario->id,
+                        'nombre' => $usuario->nombre,
+                        'apellido' => $usuario->apellido,
+                        'email' => $usuario->email,
+                        'rol' => $usuario->rol,
+                        'exp' => time() + (60 * 60)
+                    ]);
+
+                    // Guardar el token en la sesión
+                    $_SESSION['token'] = $token;
+                    // Redireccionar según el rol del usuario
+                    header('Location: /index');
+                    exit;
                 } else {
-                    UsuarioModel::setAlerta('error', 'Usuario no encontrado');
+                    UsuarioModel::setAlerta('error', 'Usuario no encontrado o contraseña incorrecta');
                 }
             }
         }
-    
-        $alertas = UsuarioModel::getAlertas();
 
-        
-    
+        $alertas = UsuarioModel::getAlertas();
         $router->render('auth/login', [
             'alertas' => $alertas,
-            'token' => $token
         ]);
     }
-    
 
-    public static function logout() {
-        // El logout simplemente invalida el token en el frontend.
-        echo json_encode(['message' => 'Logout successful']);
+    public static function logout()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
+        header('Location: /login');
+        exit;
     }
 
-    public static function olvide(Router $router) {
+    public static function olvide(Router $router)
+    {
         $alertas = [];
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $auth = new UsuarioModel($_POST);
@@ -99,133 +102,150 @@ class LoginController {
         ]);
     }
 
-    public static function recuperar(Router $router) {
+    public static function recuperar(Router $router)
+    {
         $alertas = [];
-        $error = false;
-
         $token = s($_GET['token']);
 
-        // Buscar usuario por su token
-        $usuario = UsuarioModel::where('token', $token);
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
 
-        if (empty($usuario)) {
-            UsuarioModel::setAlerta('error', 'Token No Válido');
-            $error = true;
+        $usuario = new UsuarioModel;
+        $encontrado = UsuarioModel::where('token', $token);
+
+        if (empty($encontrado)) {
+            $usuario::setAlerta('error', 'Token No Válido');
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Leer el nuevo password y guardarlo
-
-            $password = new UsuarioModel(s($_POST));
-            $alertas = $password->validarPassword();
+            $usuario->sincronizar($_POST);
+            $alertas = $usuario->validarPassword();
 
             if (empty($alertas)) {
-                $usuario->password = null;
+                $encontrado->password = $usuario->password;
+                $encontrado->hashPassword();
+                $encontrado->token = null;
+                $resultado = $encontrado->guardar();
 
-                $usuario->password = $password->password;
-                $usuario->hashPassword();
-                $usuario->token = null;
-
-                $resultado = $usuario->guardar();
                 if ($resultado) {
                     header('Location: /login');
                 }
             }
         }
 
-        $alertas = UsuarioModel::getAlertas();
+        $alertas = $usuario::getAlertas();
         $router->render('auth/recuperar-password', [
-            'alertas' => $alertas,
-            'error' => $error
+            'alertas' => $alertas
         ]);
     }
 
-    public static function crear(Router $router) {
+    public static function crear(Router $router)
+    {
         $usuario = new UsuarioModel;
-
-        // Alertas vacías
         $alertas = [];
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario->sincronizar($_POST);
             $alertas = $usuario->validarNuevaCuenta();
 
-            // Revisar que alerta esté vacío
             if (empty($alertas)) {
-                // Verificar que el usuario no esté registrado
                 $resultado = UsuarioModel::existeUsuario(s($_POST['email']));
 
                 if ($resultado) {
-                    $alertas = UsuarioModel::getAlertas();
+                    $usuario::setAlerta('error', 'Usuario ya está registrado.');
                 } else {
-                    // Hashear el Password
                     $usuario->hashPassword();
-
-                    // Generar un Token único
                     $usuario->crearToken();
-
-                    // Enviar el Email
                     $email = new Email($usuario->nombre, $usuario->email, $usuario->token);
                     $email->enviarConfirmacion();
 
-                    // Crear el usuario
                     $resultado = $usuario->guardar();
                     if ($resultado) {
                         header('Location: /mensaje');
+                    } else {
+                        $usuario::setAlerta('error', 'Ocurrió un error inesperado al intentar crear el usuario');
                     }
                 }
             }
         }
 
+        $alertas = $usuario::getAlertas();
         $router->render('auth/crear-cuenta', [
             'usuario' => $usuario,
             'alertas' => $alertas
         ]);
     }
 
-    public static function mensaje(Router $router) {
+    public static function mensaje(Router $router)
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
         $router->render('auth/mensaje');
     }
 
-    public static function confirmar(Router $router) {
+    public static function confirmar(Router $router)
+    {
         $alertas = [];
-        
 
-        // Verificar si se proporciona un token en la URL
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['token']);
+
         if (isset($_GET['token'])) {
             $token = s($_GET['token']);
-
-            // Buscar usuario por su token
             $usuario = UsuarioModel::where('token', $token);
 
             if (empty($usuario)) {
-                // Mostrar mensaje de error
                 UsuarioModel::setAlerta('error', 'Token No Válido');
             } else {
-                // Modificar a usuario confirmado
                 $usuario->confirmado = 1;
                 $usuario->token = null;
                 $usuario->guardar();
                 UsuarioModel::setAlerta('exito', 'Cuenta Comprobada Correctamente');
             }
         } else {
-            // Si no se proporciona un token en la URL, mostrar mensaje de error
             UsuarioModel::setAlerta('error', 'Token no proporcionado');
         }
 
-        // Obtener alertas
         $alertas = UsuarioModel::getAlertas();
-
-        // Renderizar la vista
         $router->render('auth/confirmar-cuenta', [
             'alertas' => $alertas
         ]);
     }
 
-    public static function index(Router $router){
-        session_start();
-        checkPerm();
-        $router->render('index', [
+    public static function index(Router $router)
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        ]);
+        $token = isset($_SESSION['token']) ? $_SESSION['token'] : null;
+
+        if ($token) {
+            $jwt = new JWT();
+            $payload = $jwt->decode($token);
+
+            if ($payload) {
+                $router->render('index', ['payload' => $payload]);
+            } else {
+                unset($_SESSION['token']);
+                header('Location: /login');
+                exit;
+            }
+        } else {
+            unset($_SESSION['token']);
+            header('Location: /login');
+            exit;
+        }
     }
 }

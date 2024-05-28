@@ -1,5 +1,5 @@
 <?php
-Class JWT {
+class JWT {
     private $secretKey;
 
     public function __construct() {
@@ -20,13 +20,14 @@ Class JWT {
     }
 
     public function decode($jwt) {
-        list($header, $payload, $signature) = explode('.', $jwt);
+        list($base64UrlHeader, $base64UrlPayload, $base64UrlSignature) = explode('.', $jwt);
 
-        $header = json_decode($this->base64UrlDecode($header), true);
-        $payload = json_decode($this->base64UrlDecode($payload), true);
-        $signatureProvided = $this->base64UrlDecode($signature);
+        $header = json_decode($this->base64UrlDecode($base64UrlHeader), true);
+        $payload = json_decode($this->base64UrlDecode($base64UrlPayload), true);
+        $signatureProvided = $this->base64UrlDecode($base64UrlSignature);
 
-        $signatureValid = hash_hmac('sha256', "$header.$payload", $this->secretKey, true);
+        // Aseguramos que estamos utilizando las versiones codificadas en Base64 de los encabezados y el payload
+        $signatureValid = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $this->secretKey, true);
 
         if ($signatureProvided !== $signatureValid) {
             return false;

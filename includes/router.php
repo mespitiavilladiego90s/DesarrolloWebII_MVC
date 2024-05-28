@@ -1,31 +1,30 @@
 <?php
-
 class Router
 {
     public array $routes = [];
 
     // Método para agregar una ruta GET
-    public function get($url, $controllerMethod)
+    public function get($url, $controllerMethod, $options = [])
     {
-        $this->routes['GET'][$url] = $controllerMethod;
+        $this->routes['GET'][$url] = array_merge(['controller' => $controllerMethod], $options);
     }
 
     // Método para agregar una ruta POST
-    public function post($url, $controllerMethod)
+    public function post($url, $controllerMethod, $options = [])
     {
-        $this->routes['POST'][$url] = $controllerMethod;
+        $this->routes['POST'][$url] = array_merge(['controller' => $controllerMethod], $options);
     }
 
     // Método para agregar una ruta PUT
-    public function put($url, $controllerMethod)
+    public function put($url, $controllerMethod, $options = [])
     {
-        $this->routes['PUT'][$url] = $controllerMethod;
+        $this->routes['PUT'][$url] = array_merge(['controller' => $controllerMethod], $options);
     }
 
     // Método para agregar una ruta DELETE
-    public function delete($url, $controllerMethod)
+    public function delete($url, $controllerMethod, $options = [])
     {
-        $this->routes['DELETE'][$url] = $controllerMethod;
+        $this->routes['DELETE'][$url] = array_merge(['controller' => $controllerMethod], $options);
     }
 
     // Método para ejecutar la ruta actual
@@ -34,27 +33,23 @@ class Router
         $currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Obtener la ruta de la URL actual
         $method = $_SERVER['REQUEST_METHOD'];
 
-        // Rutas que requieren autenticación
-        $protectedRoutes = [
-            'GET' => ['/crear-reunion', '/obtenerreuniones', '/index'],
-            'POST' => ['/crear-reunion'],
-            'PUT' => ['/actualizarreunion']
-        ];
-
         // Verificar si la ruta actual coincide con alguna ruta definida
-        foreach ($this->routes[$method] as $urlPattern => $controllerMethod) {
+        foreach ($this->routes[$method] as $urlPattern => $route) {
             // Dividir la URL en ruta y parámetros de consulta
             $urlParts = explode('?', $urlPattern, 2);
             $urlPath = $urlParts[0];
 
             if (preg_match($this->patternToRegex($urlPath), $currentUrl, $matches)) {
-                // Verificar si la ruta es protegida
-                if (in_array($urlPath, $protectedRoutes[$method])) {
-                    require_once 'middleware.php';
-                    checkAuth();
+                // Verificar si hay middleware definido para esta ruta
+                if (isset($route['middleware'])) {
+                    // Instanciar el middleware
+                    $middleware = new $route['middleware']();
+                    // Ejecutar el middleware
+                    $middleware->handle();
                 }
+
                 // Llamar al método del controlador asociado a la ruta
-                $this->callControllerMethod($controllerMethod, $matches);
+                $this->callControllerMethod($route['controller'], $matches);
                 return;
             }
         }

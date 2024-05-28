@@ -107,8 +107,6 @@ class UsuarioModel extends ActiveRecord
         }
     }
 
-
-
     public function hashPassword()
     {
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
@@ -129,4 +127,6 @@ class UsuarioModel extends ActiveRecord
             return true;
         }
     }
+
+
 }

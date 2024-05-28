@@ -112,13 +112,26 @@ class ActiveRecord
     }
 
     // Busca un registro por un parámetro
-    public static function where($columna, $valor) {
-        static::$alertas = []; // Inicializar el array de alertas
-        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
-        $resultado = self::consultarSQL($query);
-        return !empty($resultado) ? $resultado[0] : null;
+    public static function where($columna, $valor)
+    {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = :valor LIMIT 1";
+        // Preparar la consulta
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':valor', $valor);
+        // Ejecutar la consulta
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Si se encuentra un registro, crear una instancia de la clase heredada
+        if ($resultado) {
+            $obj = new static;
+            $obj->sincronizar($resultado);
+            return $obj;
+        }
+
+        return null;
     }
-    
+
 
 
 

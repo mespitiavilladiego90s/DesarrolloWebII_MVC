@@ -5,6 +5,7 @@ require_once './includes/db.php';
 require_once './includes/ActiveRecord.php';
 require_once './includes/funciones.php';
 require_once './classes/JWT.php';
+require_once './classes/AuthMiddleware.php';
 
 use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
@@ -41,8 +42,10 @@ $router->get('/confirmar-cuenta', 'LoginController@confirmar');
 $router->get('/mensaje', 'LoginController@mensaje');
 
 
-// Index
-$router->get('/index', 'LoginController@index');
+
+// Registra el middleware para la ruta protegida
+$router->get('/index', 'LoginController@index', ['middleware' => 'AuthMiddleware']);
+
 
 
 /*
