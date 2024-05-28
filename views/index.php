@@ -1,42 +1,4 @@
-<nav class="navbar navbar-expand-sm bgnavbar navbar-dark d-flex justify-content-center">
-    <!-- Brand -->
-    <a class="navbar-brand" href="/index">MyMeet!</a>
-
-
-    <?php if (checkPerm('Admin', true)) : ?>
-        <!-- Links -->
-        <ul class="navbar-nav">
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Reuniones</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Usuarios</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Actas</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Informes</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Cerrar Sesión</a>
-            </li>
-
-
-
-        </ul>
-    <?php endif; ?>
-
-
-</nav>
-
-<main>
-    <div class="container d-flex justify-content-center my-5">
+<div class="container d-flex justify-content-center my-5">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row align-items-center mb-2">
@@ -178,8 +140,6 @@
 
         </div>
     </div>
-
-</main>
 
 <script>
     function openMeetingDialog() {

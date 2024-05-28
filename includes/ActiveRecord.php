@@ -116,7 +116,7 @@ class ActiveRecord
         static::$alertas = []; // Inicializar el array de alertas
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
-        return array_shift($resultado);
+        return !empty($resultado) ? $resultado[0] : null;
     }
     
 

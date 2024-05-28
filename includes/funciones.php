@@ -17,12 +17,13 @@ function s($html) : string {
 
 // Función que revisa que el usuario este autenticado
 function checkPerm($role = null, $boolRoled = false): bool {
-    $roleMap = [
-        'Default' => 1,
-        'Admin' => 2,
-        'Meeting Creator' => 3,
-        'Meeting Assistant' => 4,
-        'Inform Manager' => 5
+    // Lista de roles válidos
+    $validRoles = [
+        'Default',
+        'Admin',
+        'Meeting Creator',
+        'Meeting Assistant',
+        'Inform Manager'
     ];
 
     // Si no recibimos un rol válido, verificamos si la sesión tiene configurado un rol
@@ -35,8 +36,8 @@ function checkPerm($role = null, $boolRoled = false): bool {
             exit;
         }
     } else {
-        // Verificamos si el rol existe en el mapa
-        if (!isset($roleMap[$role])) {
+        // Verificamos si el rol existe en la lista de roles válidos
+        if (!in_array($role, $validRoles)) {
             // Rol no reconocido, redirigimos al login
             if ($boolRoled) {
                 return false;
@@ -45,11 +46,8 @@ function checkPerm($role = null, $boolRoled = false): bool {
             exit;
         }
 
-        // Obtenemos el valor numérico del rol
-        $roleValue = $roleMap[$role];
-
         // Verificamos si la sesión tiene el rol correcto
-        if (!isset($_SESSION['rol']) || $_SESSION['rol'] != $roleValue) {
+        if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== $role) {
             if ($boolRoled) {
                 return false;
             }

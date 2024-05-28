@@ -21,7 +21,7 @@ class UsuarioModel extends ActiveRecord
     public $confirmado;
     public $token;
 
-    
+
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
@@ -30,7 +30,7 @@ class UsuarioModel extends ActiveRecord
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
-        $this->rol = $args['rol'] ?? '1';
+        $this->rol = $args['rol'] ?? 'Default';
         $this->confirmado = $args['confirmado'] ?? '0';
         $this->token = $args['token'] ?? '';
     }
@@ -45,8 +45,8 @@ class UsuarioModel extends ActiveRecord
         if (!$this->apellido) {
             self::$alertas['error'][] = 'El Apellido es Obligatorio';
         }
-        if (!$this->email) {
-            self::$alertas['error'][] = 'El Email es Obligatorio';
+        if (!$this->email || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            self::$alertas['error'][] = 'El Email es Obligatorio o no contiene formato válido.';
         }
         if (!$this->password) {
             self::$alertas['error'][] = 'El Password es Obligatorio';
@@ -62,7 +62,7 @@ class UsuarioModel extends ActiveRecord
 
     public function validarLogin()
     {
-        if (!$this->email) {
+        if (!$this->email || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             self::$alertas['error'][] = 'El email es Obligatorio';
         }
         if (!$this->password) {
@@ -71,9 +71,10 @@ class UsuarioModel extends ActiveRecord
 
         return self::$alertas;
     }
+
     public function validarEmail()
     {
-        if (!$this->email) {
+        if (!$this->email || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             self::$alertas['error'][] = 'El email es Obligatorio';
         }
         return self::$alertas;
@@ -92,18 +93,21 @@ class UsuarioModel extends ActiveRecord
     }
 
     // Revisa si el usuario ya existe
-    public function existeUsuario()
+    public static function existeUsuario($email)
     {
-        $query = " SELECT * FROM " . self::$tabla . " WHERE email = '" . $this->email . "' LIMIT 1";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE email = :email";
+        $resultado = self::$db->prepare($query);
+        $resultado->execute([':email' => $email]);
+        $usuario = $resultado->fetch(PDO::FETCH_ASSOC);
 
-        $resultado = self::$db->query($query);
-
-        if ($resultado->num_rows) {
-            self::$alertas['error'][] = 'El Usuario ya esta registrado';
+        if ($usuario) {
+            return new UsuarioModel($usuario);
+        } else {
+            return false;
         }
-
-        return $resultado;
     }
+
+
 
     public function hashPassword()
     {
@@ -115,14 +119,14 @@ class UsuarioModel extends ActiveRecord
         $this->token = uniqid();
     }
 
-    public function comprobarPasswordAndVerificado($password) {
+    public function comprobarPasswordAndVerificado($password)
+    {
         $resultado = password_verify($password, $this->password);
-        
-        if(!$resultado || !$this->confirmado) {
+
+        if (!$resultado || !$this->confirmado) {
             self::$alertas['error'][] = 'Password Incorrecto o tu cuenta no ha sido confirmada';
         } else {
             return true;
         }
     }
-
 }

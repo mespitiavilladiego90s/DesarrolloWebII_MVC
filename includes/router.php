@@ -29,11 +29,17 @@ class Router
     }
 
     // Método para ejecutar la ruta actual
-    // Método para ejecutar la ruta actual
     public function comprobarRutas()
     {
         $currentUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Obtener la ruta de la URL actual
         $method = $_SERVER['REQUEST_METHOD'];
+
+        // Rutas que requieren autenticación
+        $protectedRoutes = [
+            'GET' => ['/crear-reunion', '/obtenerreuniones', '/index'],
+            'POST' => ['/crear-reunion'],
+            'PUT' => ['/actualizarreunion']
+        ];
 
         // Verificar si la ruta actual coincide con alguna ruta definida
         foreach ($this->routes[$method] as $urlPattern => $controllerMethod) {
@@ -42,6 +48,11 @@ class Router
             $urlPath = $urlParts[0];
 
             if (preg_match($this->patternToRegex($urlPath), $currentUrl, $matches)) {
+                // Verificar si la ruta es protegida
+                if (in_array($urlPath, $protectedRoutes[$method])) {
+                    require_once 'middleware.php';
+                    checkAuth();
+                }
                 // Llamar al método del controlador asociado a la ruta
                 $this->callControllerMethod($controllerMethod, $matches);
                 return;
@@ -51,7 +62,6 @@ class Router
         // Si no se encuentra ninguna ruta coincidente
         echo "Página No Encontrada o Ruta no válida";
     }
-
 
     // Método para convertir un patrón de ruta en una expresión regular
     private function patternToRegex($pattern)

@@ -15,30 +15,41 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" type="text/css" href="views/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
+    <?php if (checkPerm('Admin', true)) : ?>
+        <nav class="navbar navbar-expand-sm bgnavbar navbar-dark d-flex justify-content-center">
+            <!-- Brand -->
+            <a class="navbar-brand" href="/index">MyMeet!</a>
+            <ul class="navbar-nav">
+                 <li class="nav-item">
+                    <a class="nav-link" href="/crear-reunion">Crear reunión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Cerrar Sesión</a>
+                </li>
+            </ul>
+        </nav>
+    <?php endif; ?>
 
-
-    <main>
-        <!-- Contenido dinámico que se rellenará desde los otros archivos -->
-        <?php echo $content; ?>
-    </main>
-
-
+    <?php echo $content; ?>
+ 
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
         <?php
-        foreach ($alertas as $key => $mensajes) {
-            foreach ($mensajes as $mensaje) {
-                echo "Toastify({ text: '" . addslashes($mensaje) . "', duration: 2000, gravity: 'top', backgroundColor: 'linear-gradient(to right, #6300f7, #5e00ff)' }).showToast();";
+        if (isset($alertas)) {
+            foreach ($alertas as $key => $mensajes) {
+                foreach ($mensajes as $mensaje) {
+                    echo "Toastify({ text: '" . addslashes($mensaje) . "', duration: 2000, gravity: 'top', backgroundColor: 'linear-gradient(to right, #6300f7, #5e00ff)' }).showToast();";
+                }
             }
         }
         ?>
