@@ -1,7 +1,9 @@
 <?php
-
 require_once 'includes/ActiveRecord.php';
-
+require_once './Models/ActaModel.php';
+require_once './Models/AsistenteModel.php';
+require_once './Models/CompromisoModel.php';
+require_once './Models/ReunionModel.php';
 class UsuarioModel extends ActiveRecord
 {
 
@@ -127,6 +129,130 @@ class UsuarioModel extends ActiveRecord
             return true;
         }
     }
+
+    public static function obtenerTodosUsuarios()
+    {
+        $personas = self::all();
+        return array_map(function ($personas) {
+            return [
+                'id' => $personas->id,
+                'nombre' => $personas->nombre,
+                'apellido' => $personas->apellido,
+                'email' => $personas->email,
+                'telefono' => $personas->telefono,
+                'rol' => $personas->rol
+            ];
+        }, $personas);
+    }
+
+    public static function obtenerTodaInfoReunion()
+{
+    $query = "SELECT 
+                r.id AS reunion_id,
+                r.asunto,
+                r.fecha,
+                r.hora_inicio,
+                r.hora_fin,
+                r.lugar,
+                a.id AS asistente_id,
+                u.nombre AS asistente_nombre,
+                u.apellido AS asistente_apellido,
+                act.id AS acta_id,
+                act.contenido AS acta_contenido,
+                c.id AS compromiso_id,
+                c.descripcion AS compromiso_descripcion,
+                c.fecha_entrega AS compromiso_fecha_entrega,
+                c.estado AS compromiso_estado,
+                resp.nombre AS compromiso_responsable_nombre,
+                resp.apellido AS compromiso_responsable_apellido
+            FROM 
+                REUNION r
+            LEFT JOIN 
+                ASISTENTES a ON r.id = a.reunion_id
+            LEFT JOIN 
+                USUARIOS u ON a.usuario_id = u.id
+            LEFT JOIN 
+                ACTAS act ON r.id = act.reunion_id
+            LEFT JOIN 
+                COMPROMISOS c ON act.id = c.acta_id
+            LEFT JOIN 
+                USUARIOS resp ON c.responsable_id = resp.id
+            ORDER BY 
+                r.id, a.id, act.id, c.id";
+    
+    $resultados = self::$db->query($query);
+    $reuniones = [];
+    
+    while ($fila = $resultados->fetch(PDO::FETCH_ASSOC)) {
+        $reunionId = $fila['reunion_id'];
+        
+        if (!isset($reuniones[$reunionId])) {
+            $reuniones[$reunionId] = [
+                'asunto' => $fila['asunto'],
+                'fecha' => $fila['fecha'],
+                'hora_inicio' => $fila['hora_inicio'],
+                'hora_fin' => $fila['hora_fin'],
+                'lugar' => $fila['lugar'],
+                'asistentes' => [],
+                'actas' => []
+            ];
+        }
+
+        // Add asistentes if not already added
+        if ($fila['asistente_id']) {
+            $asistenteEncontrado = false;
+            foreach ($reuniones[$reunionId]['asistentes'] as $asistente) {
+                if ($asistente['id'] == $fila['asistente_id']) {
+                    $asistenteEncontrado = true;
+                    break;
+                }
+            }
+            if (!$asistenteEncontrado) {
+                $reuniones[$reunionId]['asistentes'][] = [
+                    'id' => $fila['asistente_id'],
+                    'nombre' => $fila['asistente_nombre'],
+                    'apellido' => $fila['asistente_apellido']
+                ];
+            }
+        }
+        
+        // Add actas if not already added
+        if ($fila['acta_id']) {
+            if (!isset($reuniones[$reunionId]['actas'][$fila['acta_id']])) {
+                $reuniones[$reunionId]['actas'][$fila['acta_id']] = [
+                    'id' => $fila['acta_id'],
+                    'contenido' => $fila['acta_contenido'],
+                    'compromisos' => []
+                ];
+            }
+
+            // Add compromisos if not already added
+            if ($fila['compromiso_id']) {
+                $compromisoEncontrado = false;
+                foreach ($reuniones[$reunionId]['actas'][$fila['acta_id']]['compromisos'] as $compromiso) {
+                    if ($compromiso['id'] == $fila['compromiso_id']) {
+                        $compromisoEncontrado = true;
+                        break;
+                    }
+                }
+                if (!$compromisoEncontrado) {
+                    $reuniones[$reunionId]['actas'][$fila['acta_id']]['compromisos'][] = [
+                        'id' => $fila['compromiso_id'],
+                        'descripcion' => $fila['compromiso_descripcion'],
+                        'fecha_entrega' => $fila['compromiso_fecha_entrega'],
+                        'estado' => $fila['compromiso_estado'],
+                        'responsable' => [
+                            'nombre' => $fila['compromiso_responsable_nombre'],
+                            'apellido' => $fila['compromiso_responsable_apellido']
+                        ]
+                    ];
+                }
+            }
+        }
+    }
+    
+    return array_values($reuniones);
+}
 
 
 }

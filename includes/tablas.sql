@@ -5,20 +5,22 @@ CREATE TABLE USUARIOS (
     email VARCHAR(60) DEFAULT NULL,
     password VARCHAR(60) DEFAULT NULL,
     telefono VARCHAR(10) DEFAULT NULL,
-    rol ENUM('Default', 'Admin', 'Meeting Creator', 'Meeting Assistant', 'Inform Manager') DEFAULT 'Default',
+    rol ENUM('Default', 'Admin', 'Inform Manager') DEFAULT 'Default',
     confirmado TINYINT(1) DEFAULT NULL,
     token VARCHAR(15) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE REUNION (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario int NOT NULL,
     fecha DATE NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     lugar VARCHAR(255) NOT NULL,
     asunto VARCHAR(255) NOT NULL,
-    estado ENUM('pública', 'privada') NOT NULL
+    estado ENUM('pública', 'privada') NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

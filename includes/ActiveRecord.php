@@ -132,8 +132,76 @@ class ActiveRecord
         return null;
     }
 
+    public static function allWhere($columna, $valor)
+    {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = :valor";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':valor', $valor);
+        $stmt->execute();
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        return array_map(function ($registro) {
+            return static::crearObjeto($registro);
+        }, $resultados);
+    }
+    
+    public static function getCampoPorId($id, $campo)
+    {
+        // Validar que el campo solicitado existe en la tabla para evitar inyección SQL
+        $query = "SELECT COLUMN_NAME 
+              FROM INFORMATION_SCHEMA.COLUMNS 
+              WHERE TABLE_NAME = :tabla AND COLUMN_NAME = :campo";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':tabla', static::$tabla);
+        $stmt->bindParam(':campo', $campo);
+        $stmt->execute();
+        $columnaValida = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        if (!$columnaValida) {
+            throw new Exception("El campo especificado no existe en la tabla.");
+        }
+
+        // Preparar la consulta para obtener el valor del campo específico
+        $query = "SELECT $campo FROM " . static::$tabla . " WHERE id = :id LIMIT 1";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':id', $id);
+
+        // Ejecutar la consulta
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Si se encuentra un registro, retornar el valor del campo solicitado
+        if ($resultado) {
+            return $resultado[$campo];
+        }
+
+        return null;
+    }
+
+    // Método para verificar si el usuario es asistente de la reunión
+    public static function verificarUsuarioAsistente($acta_id, $responsable_id)
+    {
+        // Obtener reunion_id de la tabla actas
+        $query = "SELECT reunion_id FROM actas WHERE id = :acta_id";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':acta_id', $acta_id);
+        $stmt->execute();
+        $reunion_id = $stmt->fetchColumn();
+
+        if ($reunion_id === false) {
+            return false;
+        }
+
+        // Verificar si el reunion_id obtenido de actas es el mismo que en la tabla asistentes para el usuario
+        $query = "SELECT COUNT(*) FROM asistentes WHERE usuario_id = :responsable_id AND reunion_id = :reunion_id";
+        $stmt = self::$db->prepare($query);
+        $stmt->bindParam(':responsable_id', $responsable_id);
+        $stmt->bindParam(':reunion_id', $reunion_id);
+        $stmt->execute();
+        $count = $stmt->fetchColumn();
+
+        return $count > 0;
+    }
 
     public function actualizar()
     {

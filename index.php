@@ -45,16 +45,51 @@ $router->get('/mensaje', 'LoginController@mensaje');
 
 // Registra el middleware para la ruta protegida
 $router->get('/index', 'LoginController@index', ['middleware' => 'AuthMiddleware']);
+$router->get('/obtenerinforeuniones', 'LoginController@obtenerReuniones', ['middleware' => 'AuthMiddleware']);
+
+
+/*
+    -----------------------  RUTAS PARA LA TABLA USUARIOS (CREAR PERSONAS) -------------------------
+*/
+$router->get('/crear-persona', 'PersonaController@crear', ['middleware' => 'AuthMiddleware']);
+$router->post('/crear-persona', 'PersonaController@crear', ['middleware' => 'AuthMiddleware']);
+$router->get('/obtenerpersonas', 'PersonaController@obtenerPersonas', ['middleware' => 'AuthMiddleware']);
+$router->put('/actualizarpersonas', 'PersonaController@actualizarPersona', ['middleware' => 'AuthMiddleware']);
 
 
 
 /*
+    -----------------------  RUTAS PARA LA TABLA REUNION -------------------------
+*/
+$router->get('/crear-reunion', 'ReunionController@crear', ['middleware' => 'AuthMiddleware']);
+$router->post('/crear-reunion', 'ReunionController@crear', ['middleware' => 'AuthMiddleware']);
+$router->get('/obtenerreuniones', 'ReunionController@obtenerReuniones', ['middleware' => 'AuthMiddleware']);
+$router->put('/actualizarreunion', 'ReunionController@actualizarReunion', ['middleware' => 'AuthMiddleware']);
+
+/*
+    -----------------------  RUTAS PARA LA TABLA ASISTENTES -------------------------
+*/
+$router->get('/crear-asistente', 'AsistenteController@crear', ['middleware' => 'AuthMiddleware']);
+$router->post('/crear-asistente', 'AsistenteController@crear', ['middleware' => 'AuthMiddleware']);
+$router->get('/obtenerasistentes', 'AsistenteController@obtenerAsistentes', ['middleware' => 'AuthMiddleware']);
+$router->put('/actualizarasistente', 'AsistenteController@actualizarAsistente', ['middleware' => 'AuthMiddleware']);
+
+/*
     -----------------------  RUTAS PARA LA TABLA ACTAS -------------------------
 */
-$router->get('/crear-reunion', 'ReunionController@crear');
-$router->post('/crear-reunion', 'ReunionController@crear');
-$router->get('/obtenerreuniones', 'ReunionController@obtenerReuniones');
-$router->put('/actualizarreunion', 'ReunionController@actualizarReunion');
+$router->get('/crear-acta', 'ActaController@crear', ['middleware' => 'AuthMiddleware']);
+$router->post('/crear-acta', 'ActaController@crear', ['middleware' => 'AuthMiddleware']);
+$router->get('/obteneractas', 'ActaController@obtenerActas', ['middleware' => 'AuthMiddleware']);
+$router->put('/actualizaracta', 'ActaController@actualizarActa', ['middleware' => 'AuthMiddleware']);
+
+/*
+    -----------------------  RUTAS PARA LA TABLA COMPROMISOS -------------------------
+*/
+$router->get('/crear-compromiso', 'CompromisoController@crear', ['middleware' => 'AuthMiddleware']);
+$router->post('/crear-compromiso', 'CompromisoController@crear', ['middleware' => 'AuthMiddleware']);
+$router->get('/obtenercompromisos', 'CompromisoController@obtenerCompromisos', ['middleware' => 'AuthMiddleware']);
+$router->put('/actualizarcompromiso', 'CompromisoController@actualizarCompromiso', ['middleware' => 'AuthMiddleware']);
+
 
 
 // Ejecutamos nuestro enrutador

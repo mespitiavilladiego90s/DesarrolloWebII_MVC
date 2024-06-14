@@ -1,184 +1,195 @@
 <div class="container d-flex justify-content-center my-5">
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row align-items-center mb-2">
-                    <div class="col-sm-4">
-                        <h2 style="color: white;">Asignar acta a reunión</h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="input-group rounded">
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Buscar..." aria-describedby="search-addon" />
-                            <span class="input-group-text border-0" id="search-addon">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 text-end">
-                        <button class="btn btn-success" onclick="openMeetingDialog()">
-                            Agendar nueva reunión
-                        </button>
+    <div class="table-wrapper">
+        <div class="table-title">
+            <!-- Searchbar -->
+            <div class="row align-items-center mb-2">
+                <div class="col-sm-4">
+                    <h2 style="color: white;">Visualizador de reuniones</h2>
+                </div>
+                <div class="col-sm-4">
+                    <div class="input-group rounded">
+                        <input type="search" class="form-control rounded" placeholder="Buscar reunión..." aria-label="Buscar..." aria-describedby="search-addon" />
+                        <span class="input-group-text border-0" id="search-addon">
+                            <i class="fas fa-search"></i>
+                        </span>
                     </div>
                 </div>
-            </div>
-
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Seleccionar</th>
-                        <th>Asunto</th>
-                        <th>Fecha reunión</th>
-                        <th>Participantes</th>
-                        <th>Lugar encuentro</th>
-                        <th>Compromisos</th>
-                        <th>Inicio</th>
-                        <th>Finalización</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <span class="custom-checkbox">
-                                <input type="checkbox" id="checkbox1" name="options[]" value="1">
-                                <label for="checkbox1"></label>
-                            </span>
-                        </td>
-                        <td>Reunión comité curricular</td>
-
-                        <td>
-                            <button type="button" class="btn btn-info">Asignar</button>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-primary"><span class="material-symbols-outlined d-flex justify-content-center">person_add</span></button>
-
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-danger"><span class="material-symbols-outlined d-flex justify-content-center">description</span></button>
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-
-                        <td>
-                            <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="custom-checkbox">
-                                <input type="checkbox" id="checkbox1" name="options[]" value="1">
-                                <label for="checkbox1"></label>
-                            </span>
-                        </td>
-                        <td>Reunión comité curricular</td>
-
-                        <td>
-                            <button type="button" class="btn btn-info">Asignar</button>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-primary"><span class="material-symbols-outlined d-flex justify-content-center">person_add</span></button>
-
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-danger"><span class="material-symbols-outlined d-flex justify-content-center">description</span></button>
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-                        <td>
-                            <h1>-</h1>
-                        </td>
-
-
-                        <td>
-                            <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center">
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="hint-text">Mostrando <b>2</b> de <b>2</b> resultados</div>
-                        <ul class="pagination">
-                            <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                            <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                        </ul>
-                    </div>
+                <div class="col-sm-4 text-end">
+                    <button class="btn btn-success" onclick="window.location.href='/crear-reunion'">
+                        Crear nueva reunión
+                    </button>
                 </div>
             </div>
-
         </div>
+
+        <!-- Tabla -->
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Asunto</th>
+                    <th>Fecha reunión</th>
+                    <th>Inicio</th>
+                    <th>Finalización</th>
+                    <th>Lugar encuentro</th>
+                    <th>Asistentes</th>
+                    <th>Actas</th>
+                    <th>Compromisos</th>
+                </tr>
+            </thead>
+            <tbody id="reuniones-tbody">
+                <!-- Los datos de las reuniones se insertarán aquí -->
+            </tbody>
+        </table>
     </div>
+</div>
 
 <script>
-    function openMeetingDialog() {
-    Swal.fire({
-        title: "Nueva Reunión",
-        input: "text",
-        inputLabel: "Ingresa aquí el asunto de la nueva reunión",
-        showCancelButton: true,
-        inputValidator: (value) => {
-            if (!value) {
-                return "¡Necesitas escribir algo!";
+    async function fetchAndRenderData() {
+        try {
+            const [reunionesResponse] = await Promise.all([
+                fetch('/obtenerinforeuniones', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            ]);
+
+            if (reunionesResponse.ok) {
+                const reuniones = await reunionesResponse.json();
+
+                // Limpiar los cuerpos de las tablas antes de renderizar nuevos datos
+                const reunionesTbody = document.getElementById('reuniones-tbody');
+                reunionesTbody.innerHTML = '';
+                reuniones.forEach(reunion => {
+                    const row = document.createElement('tr');
+
+                    const asuntoCell = document.createElement('td');
+                    asuntoCell.textContent = reunion.asunto;
+                    row.appendChild(asuntoCell);
+
+                    const fechaCell = document.createElement('td');
+                    fechaCell.textContent = reunion.fecha;
+                    row.appendChild(fechaCell);
+
+                    const horaInicioCell = document.createElement('td');
+                    horaInicioCell.textContent = reunion.hora_inicio;
+                    row.appendChild(horaInicioCell);
+
+                    const horaFinCell = document.createElement('td');
+                    horaFinCell.textContent = reunion.hora_fin;
+                    row.appendChild(horaFinCell);
+
+                    const lugarCell = document.createElement('td');
+                    lugarCell.textContent = reunion.lugar;
+                    row.appendChild(lugarCell);
+
+                    const asistentesCell = document.createElement('td');
+                    const asistentesIcon = document.createElement('i');
+                    asistentesIcon.classList.add('fas', 'fa-users');
+                    asistentesIcon.addEventListener('click', () => mostrarAsistentes(reunion.asistentes));
+                    asistentesCell.appendChild(asistentesIcon);
+                    row.appendChild(asistentesCell);
+
+                    const actasArray = Object.values(reunion.actas); // Convertir el objeto actas a un array
+
+                    const actasCell = document.createElement('td');
+                    const actasIcon = document.createElement('i');
+                    actasIcon.classList.add('fas', 'fa-file-alt');
+                    actasIcon.addEventListener('click', () => mostrarActas(actasArray));
+                    actasCell.appendChild(actasIcon);
+                    row.appendChild(actasCell);
+
+                    const compromisosCell = document.createElement('td');
+                    const compromisosIcon = document.createElement('i');
+                    compromisosIcon.classList.add('fas', 'fa-tasks');
+                    compromisosIcon.addEventListener('click', () => mostrarCompromisos(actasArray.flatMap(acta => acta.compromisos)));
+                    compromisosCell.appendChild(compromisosIcon);
+                    row.appendChild(compromisosCell);
+
+                    reunionesTbody.appendChild(row);
+                });
+            } else {
+                console.error('Error fetching reuniones:', reunionesResponse.statusText);
             }
+        } catch (error) {
+            console.error('Error during fetch operations:', error);
         }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const meetingSubject = result.value;
-            // Creamos objeto FormData con el asunto de la reunión
-            const formData = new FormData();
-            formData.append('meetingSubject', meetingSubject);
-            
-            // Realizar solicitud AJAX usando fetch
-            fetch('/crear-acta', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Error en la solicitud AJAX');
-            })
-            .then(data => {
-                Swal.fire(`Se ha agregado correctamente la reunión con el asunto: ${result.value}`);
-            })
-            .catch(error => {
-                console.error('Error:', error);
+    }
+
+    // Llamar a la función fetchAndRenderData cuando el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', fetchAndRenderData);
+
+    // Configurar un intervalo para actualizar los datos cada 1 segundos
+    setInterval(fetchAndRenderData, 1000);
+
+    async function mostrarAsistentes(asistentes) {
+        if (Array.isArray(asistentes) && asistentes.length > 0) {
+            const asistentesContent = asistentes.map(asistente => `
+                <div>ID: ${asistente.id}</div>
+                <div>Nombre: ${asistente.nombre}</div>
+                <div>Apellido: ${asistente.apellido}</div>
+                <hr>
+            `).join('');
+
+            await Swal.fire({
+                title: 'Asistentes',
+                html: asistentesContent,
+                showCloseButton: true
+            });
+        } else {
+            await Swal.fire({
+                title: 'Asistentes',
+                text: 'No hay asistentes para mostrar aún.',
+                showCloseButton: true
             });
         }
-    });
-}
+    }
 
+    async function mostrarActas(actas) {
+        if (Array.isArray(actas) && actas.length > 0) {
+            const actasContent = actas.map(acta => `
+                <div>ID: ${acta.id}</div>
+                <div>Contenido: ${acta.contenido}</div>
+                <hr>
+            `).join('');
+
+            await Swal.fire({
+                title: 'Actas',
+                html: actasContent,
+                showCloseButton: true
+            });
+        } else {
+            await Swal.fire({
+                title: 'Actas',
+                text: 'No hay actas para mostrar aún.',
+                showCloseButton: true
+            });
+        }
+    }
+
+    async function mostrarCompromisos(compromisos) {
+        if (Array.isArray(compromisos) && compromisos.length > 0) {
+            const compromisosContent = compromisos.map(compromiso => `
+                <div>ID: ${compromiso.id}</div>
+                <div>Descripción: ${compromiso.descripcion}</div>
+                <div>Fecha Entrega: ${compromiso.fecha_entrega}</div>
+                <div>Estado: ${compromiso.estado}</div>
+                <div>Responsable: ${compromiso.responsable.nombre} ${compromiso.responsable.apellido}</div>
+                <hr>
+            `).join('');
+
+            await Swal.fire({
+                title: 'Compromisos',
+                html: compromisosContent,
+                showCloseButton: true
+            });
+        } else {
+            await Swal.fire({
+                title: 'Compromisos',
+                text: 'No hay compromisos para mostrar aún.',
+                showCloseButton: true
+            });
+        }
+    }
 </script>

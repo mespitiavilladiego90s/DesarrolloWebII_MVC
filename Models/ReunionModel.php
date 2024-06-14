@@ -1,14 +1,16 @@
 <?php
 require_once './includes/ActiveRecord.php';
+require_once './Models/UsuarioModel.php';
 
 class ReunionModel extends ActiveRecord
 {
 
     // Base de datos
     protected static $tabla = 'reunion';
-    protected static $columnasDB = ['id', 'fecha', 'hora_inicio', 'hora_fin', 'lugar', 'asunto', 'estado'];
+    protected static $columnasDB = ['id', 'id_usuario','fecha', 'hora_inicio', 'hora_fin', 'lugar', 'asunto', 'estado'];
 
     public $id;
+    public $id_usuario;
     public $fecha;
     public $hora_inicio;
     public $hora_fin;
@@ -25,6 +27,7 @@ class ReunionModel extends ActiveRecord
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
+        $this->id_usuario = $args['id_usuario'] ?? '';
         $this->fecha = $args['fecha'] ?? '';
         $this->hora_inicio = $args['hora_inicio'] ?? '';
         $this->hora_fin = $args['hora_fin'] ?? '';
@@ -42,6 +45,11 @@ class ReunionModel extends ActiveRecord
             self::$alertas['error'][] = 'La fecha es obligatoria';
         } elseif (strtotime($this->fecha) < strtotime(date('Y-m-d'))) {
             self::$alertas['error'][] = 'La fecha no puede ser anterior al día actual';
+        }
+
+        // Validación de usuario
+        if (empty($this->id_usuario) || !is_numeric($this->id_usuario) || !UsuarioModel::where('id', $this->id_usuario) || $this->id_usuario <= 0) {
+            self::$alertas['error'][] = 'El ID del usuario debe ser una ID válida';
         }
 
         // Validación de hora de inicio y fin
@@ -100,6 +108,7 @@ class ReunionModel extends ActiveRecord
         return array_map(function ($reunion) {
             return [
                 'id' => $reunion->id,
+                'id_usuario' => $reunion->id_usuario,
                 'fecha' => $reunion->fecha,
                 'hora_inicio' => $reunion->hora_inicio,
                 'hora_fin' => $reunion->hora_fin,

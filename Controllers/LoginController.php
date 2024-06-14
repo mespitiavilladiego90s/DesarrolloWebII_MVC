@@ -37,6 +37,7 @@ class LoginController
 
                     // Guardar el token en la sesión
                     $_SESSION['token'] = $token;
+                    $_SESSION['id'] = $usuario->id;
                     // Redireccionar según el rol del usuario
                     header('Location: /index');
                     exit;
@@ -47,8 +48,10 @@ class LoginController
         }
 
         $alertas = UsuarioModel::getAlertas();
+
         $router->render('auth/login', [
             'alertas' => $alertas,
+            'token' => $token
         ]);
     }
 
@@ -225,6 +228,7 @@ class LoginController
 
     public static function index(Router $router)
     {
+
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
@@ -248,4 +252,42 @@ class LoginController
             exit;
         }
     }
+
+    public static function obtenerReuniones(Router $router)
+    {
+        $reunion = new ReunionModel;
+        $reunionesArray = [];
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $token = isset($_SESSION['token']) ? $_SESSION['token'] : null;
+
+        if ($token) {
+            $jwt = new JWT();
+            $payload = $jwt->decode($token);
+
+            if ($payload) {
+                if ($_SERVER["REQUEST_METHOD"] == "GET") {
+                    try {
+                        $reunionesArray = UsuarioModel::obtenerTodaInfoReunion();
+                    } catch (\Throwable $th) {
+                        $reunion::setAlerta('error', $th->getMessage());
+                    }
+                }
+                echo json_encode($reunionesArray);
+            } else {
+                unset($_SESSION['token']);
+                header('Location: /login');
+                exit;
+            }
+        } else {
+            unset($_SESSION['token']);
+            header('Location: /login');
+            exit;
+        }
+    }
+
+
 }

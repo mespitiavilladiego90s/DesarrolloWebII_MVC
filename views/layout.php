@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,18 +15,38 @@
     <link rel="stylesheet" type="text/css" href="views/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <?php if (isset($_SESSION['token'])) : ?>
         <nav class="navbar navbar-expand-sm bgnavbar navbar-dark d-flex justify-content-center">
             <!-- Brand -->
             <a class="navbar-brand" href="/index">MyMeet!</a>
             <ul class="navbar-nav">
+
                 <li class="nav-item">
-                    <a class="nav-link" href="/crear-reunion">Crear reunión</a>
+                    <a class="nav-link" href="/crear-persona">Usuarios</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/crear-reunion">Reuniones</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/crear-asistente">Asistentes</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/crear-acta">Actas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/crear-compromiso">Compromisos</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Cerrar Sesión</a>
                 </li>
+
             </ul>
         </nav>
     <?php endif; ?>
@@ -45,17 +66,9 @@
                     }
                 }
             }
-
-            if (!isset($_SESSION['token'])) {
-                echo "Toastify({
-                    text: 'Sesión cerrada!',
-                    duration: 2000,
-                    gravity: 'top',
-                    backgroundColor: 'linear-gradient(to right, #6300f7, #5e00ff)'
-                }).showToast();";
-            }
             ?>
         });
     </script>
 </body>
+
 </html>
